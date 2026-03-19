@@ -1,0 +1,13 @@
+openai:
+  api-key: ${OPENAI_API_KEY}
+  base-url: ${OPENAI_BASE_URL:https://openrouter.ai/api/v1}
+  model: ${OPENAI_MODEL:openai/gpt-4o-mini}
+  system-prompt: ${OPENAI_SYSTEM_PROMPT:You are a helpful assistant.}
+
+proxy:
+  host: ${PROXY_HOST:127.0.0.1}
+  port: ${PROXY_PORT:7897}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p ${PID:- } --- [%15.15t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
