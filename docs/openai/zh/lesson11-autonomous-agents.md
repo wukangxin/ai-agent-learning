@@ -301,7 +301,7 @@ messages.add(ChatCompletionMessageParam.ofAssistant(
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=11 --prompt='Create 3 tasks on the board. Spawn an autonomous worker. Watch it claim and complete tasks on its own.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson11 --prompt='Create 3 tasks on the board. Spawn an autonomous worker. Watch it claim and complete tasks on its own.'"
 ```
 
 观察日志中队友进入 idle 状态后自动认领任务并恢复工作。

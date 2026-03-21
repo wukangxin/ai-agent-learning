@@ -184,7 +184,7 @@ Without this hint, the model tends to do everything itself. With it, the model l
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=4 --prompt='Explore this project and summarize the architecture. Use the task tool to delegate file exploration.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson4 --prompt='Explore this project and summarize the architecture. Use the task tool to delegate file exploration.'"
 ```
 
 **Source**: [`Lesson4RunSimple.java`](../../openai/src/main/java/ai/agent/learning/lesson/Lesson4RunSimple.java)

@@ -256,7 +256,7 @@ private Map<String, ToolHandler> createHandlers() {
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=7 --prompt='Plan a REST API project with 3 tasks: setup, implementation, testing. Make them depend on each other.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson7 --prompt='Plan a REST API project with 3 tasks: setup, implementation, testing. Make them depend on each other.'"
 ```
 
 运行后查看 `.tasks/` 目录：

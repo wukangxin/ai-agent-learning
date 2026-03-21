@@ -249,7 +249,7 @@ tags: java, style, conventions
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=5 --prompt='检查项目代码是否符合 Java 编码规范'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson5 --prompt='检查项目代码是否符合 Java 编码规范'"
 ```
 
 观察模型是否主动调用 `load_skill` 来获取规范, 然后据此进行检查。

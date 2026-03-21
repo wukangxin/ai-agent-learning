@@ -376,7 +376,7 @@ tools.add(createTool("worktree_events",
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=12 --prompt='Create a task for fixing auth bugs. Create a worktree for it and run the tests inside the worktree.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson12 --prompt='Create a task for fixing auth bugs. Create a worktree for it and run the tests inside the worktree.'"
 ```
 
 运行后查看目录结构：

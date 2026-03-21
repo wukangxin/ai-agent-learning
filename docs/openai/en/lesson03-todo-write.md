@@ -209,7 +209,7 @@ handlers.put("todo", args -> {
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=3 --prompt='Analyze this project structure. Create todos for each step.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson3 --prompt='Analyze this project structure. Create todos for each step.'"
 ```
 
 **Source**: [`Lesson3RunSimple.java`](../../openai/src/main/java/ai/agent/learning/lesson/Lesson3RunSimple.java)

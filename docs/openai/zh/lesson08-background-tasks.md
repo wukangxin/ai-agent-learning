@@ -257,7 +257,7 @@ static class TaskInfo {
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=8 --prompt='Run mvn test in background, then while it runs, read the pom.xml file.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson8 --prompt='Run mvn test in background, then while it runs, read the pom.xml file.'"
 ```
 
 观察日志中 `background_run` 立即返回 task_id，随后在某次 LLM 调用前出现 `<background-results>` 通知。

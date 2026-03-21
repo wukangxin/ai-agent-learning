@@ -157,7 +157,7 @@ private String runBash(String command) {
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=1 --prompt='列出当前目录的文件, 然后统计 Java 文件数量'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson1 --prompt='列出当前目录的文件, 然后统计 Java 文件数量'"
 ```
 
 观察输出: 模型会自主决定执行哪些命令, 自行循环多次, 直到完成任务。

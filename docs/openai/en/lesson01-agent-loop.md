@@ -145,7 +145,7 @@ private String runBash(String command) {
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=1 --prompt='List the files in the current directory and tell me what you see.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson1 --prompt='List the files in the current directory and tell me what you see.'"
 ```
 
 **Source**: [`Lesson1RunSimple.java`](../../openai/src/main/java/ai/agent/learning/lesson/Lesson1RunSimple.java)

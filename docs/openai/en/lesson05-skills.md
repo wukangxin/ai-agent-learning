@@ -223,7 +223,7 @@ Then run:
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=5 --prompt='I need to commit my changes. Load the relevant skill first.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson5 --prompt='I need to commit my changes. Load the relevant skill first.'"
 ```
 
 **Source**: [`Lesson5RunSimple.java`](../../openai/src/main/java/ai/agent/learning/lesson/Lesson5RunSimple.java)

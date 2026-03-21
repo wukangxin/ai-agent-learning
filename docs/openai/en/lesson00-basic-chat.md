@@ -73,7 +73,7 @@ No loop, no tools, no message accumulation. This is the baseline everything else
 
 ```sh
 cd ai-agent-learning
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=0 --prompt='Hello, what can you do?'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson0 --prompt='Hello, what can you do?'"
 ```
 
 **Source**: [`Lesson0RunSimple.java`](../../openai/src/main/java/ai/agent/learning/lesson/Lesson0RunSimple.java)
