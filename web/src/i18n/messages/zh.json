@@ -103,5 +103,8 @@
     "memory": "内存管理",
     "concurrency": "并发",
     "collaboration": "协作"
+  },
+  "footer": {
+    "views": "总访问量"
   }
 }

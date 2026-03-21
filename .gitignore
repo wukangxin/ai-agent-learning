@@ -5,3 +5,4 @@ target/
 .claude/
 web/node_modules/
 web/.next/
+web/.pageview-count.json

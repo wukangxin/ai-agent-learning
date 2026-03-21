@@ -103,5 +103,8 @@
     "memory": "Memory Management",
     "concurrency": "Concurrency",
     "collaboration": "Collaboration"
+  },
+  "footer": {
+    "views": "Total Views"
   }
 }
