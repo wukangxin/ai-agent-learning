@@ -418,7 +418,7 @@ class TeammateManager {
 
 ```
 每一轮:
-  [1] microCompact()    -- 截断 >1500 字符的工具输出为前500+后500
+  [1] microCompact()    -- 超过最近 6 条消息的工具结果截断到 200 字符
   [2] autoCompact()     -- token > 100000 时, LLM 自动摘要
   [3] 手动 compress     -- 智能体主动调用 compress 工具
 

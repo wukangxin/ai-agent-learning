@@ -311,9 +311,9 @@ private String runSubagent(String prompt, String agentType) {
 Three compression strategies working together:
 
 ```java
-// 1. Micro-compact: truncate large tool results inline
+// 1. Micro-compact: truncate old tool results to save context
 private void microCompact(List<ChatCompletionMessageParam> messages) {
-    // Simplified: truncate large tool results
+    // Tool results beyond the last 6 messages get truncated to 200 chars
 }
 
 // 2. Auto-compact: triggered when tokens exceed threshold

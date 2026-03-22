@@ -53,7 +53,6 @@ public class Lesson6RunSimple implements RunSimple {
     private static final Logger log = LoggerFactory.getLogger(Lesson6RunSimple.class);
 
     private static final int THRESHOLD = 50000;
-    private static final int KEEP_RECENT = 3;
 
     @Value("${openai.api-key}")
     private String apiKey;

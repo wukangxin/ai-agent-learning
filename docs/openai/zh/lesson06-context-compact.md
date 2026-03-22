@@ -22,8 +22,8 @@
 |                                                                |
 |  Layer 1: micro_compact (每轮静默)                              |
 |  +---------------------------------------------------------+  |
-|  | 旧工具结果 -> "[已处理: read_file pom.xml, 2.3KB]"       |  |
-|  | 保留最近 N 条结果完整                                     |  |
+|  | 超过最近 6 条消息的工具结果截断到 200 字符                 |  |
+|  | 近期工具结果保持完整                                       |  |
 |  +---------------------------------------------------------+  |
 |                          |                                     |
 |  Layer 2: auto_compact (超阈值自动触发)                         |
@@ -64,18 +64,18 @@ private int estimateTokens(List<ChatCompletionMessageParam> messages) {
 
 ```java
 private void microCompact(List<ChatCompletionMessageParam> messages) {
-    // 保留最近 KEEP_RECENT 条工具结果完整
-    // 将更早的工具结果替换为占位符
-    //
-    // 原始: "package ai.agent.learning...\n public class Lesson0..."  (2000 chars)
-    // 压缩后: "[已处理: read_file Lesson0RunSimple.java, 2.0KB]"     (50 chars)
+    // 超过最近 6 条消息的工具结果截断到 200 字符
+    int cutoff = Math.max(0, messages.size() - 6);
+    for (int i = 0; i < cutoff; i++) {
+        // 如果是工具消息且 content > 200 字符, 截断并加 "... [truncated]"
+    }
 }
 ```
 
 micro_compact 的特点:
 - **每轮都执行**, 在 LLM 调用之前
-- **静默的**: 不产生新消息, 只修改已有消息
-- **保留近期**: 最近的工具结果保持完整, 模型可能还需要引用
+- **静默的**: 不产生新消息, 只修改已有消息的 content 字段
+- **保留近期**: 最近 6 条消息中的工具结果保持完整, 模型可能还需要引用
 
 ### 3. Layer 2: auto_compact (自动压缩)
 

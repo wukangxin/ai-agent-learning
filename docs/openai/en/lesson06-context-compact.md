@@ -22,8 +22,8 @@ Three layers, each with increasing impact:
 Layer 1: micro_compact (every turn, silent)
 +--------------------------------------------------+
 | Before each LLM call:                            |
-| - Old tool results (beyond KEEP_RECENT) get      |
-|   replaced with "[content compacted]"            |
+| - Tool results beyond the last 6 messages get    |
+|   truncated to 200 chars + "... [truncated]"    |
 | - Recent tool results stay intact                |
 | - No LLM call needed                             |
 +--------------------------------------------------+
@@ -65,13 +65,15 @@ This is intentionally imprecise. The ratio of ~4 characters per token is a rough
 
 ```java
 private void microCompact(List<ChatCompletionMessageParam> messages) {
-    // Replace old tool results with placeholders
-    // Keep the KEEP_RECENT most recent tool results intact
-    // No LLM call needed -- pure string replacement
+    // Truncate tool results older than the last 6 messages to 200 chars
+    int cutoff = Math.max(0, messages.size() - 6);
+    for (int i = 0; i < cutoff; i++) {
+        // if message is a tool result with content > 200 chars, truncate it
+    }
 }
 ```
 
-The idea: tool results from 10 steps ago are unlikely to matter. Replace their content with `"[content compacted]"` to save tokens. The message structure (role, tool_call_id) is preserved so the conversation remains valid. Only the `content` field is shortened.
+The idea: tool results from many steps ago are unlikely to matter. Truncate their content to 200 characters to save tokens. The message structure (role, tool_call_id) is preserved so the conversation remains valid. Only the `content` field is shortened.
 
 This layer is **silent** -- the model never knows it happened. It runs every turn and prevents gradual bloat.
 
