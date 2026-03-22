@@ -181,8 +181,8 @@ export default function ComparePage() {
               </CardTitle>
               {comparison.newClasses.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
-                  {comparison.newClasses.map((cls) => (
-                    <span key={cls} className="rounded bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                  {comparison.newClasses.map((cls, i) => (
+                    <span key={`${cls}-${i}`} className="rounded bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
                       {cls}
                     </span>
                   ))}
@@ -202,8 +202,8 @@ export default function ComparePage() {
               </CardTitle>
               {comparison.newMethods.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
-                  {comparison.newMethods.map((fn) => (
-                    <span key={fn} className="rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                  {comparison.newMethods.map((fn, i) => (
+                    <span key={`${fn}-${i}`} className="rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
                       {fn}
                     </span>
                   ))}
