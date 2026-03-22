@@ -113,54 +113,60 @@ export function Header() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu overlay */}
       {mobileOpen && (
-        <div className="border-t border-[var(--color-border)] bg-[var(--color-bg)] p-4 md:hidden">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.key}
-              href={`/${locale}${item.href}`}
-              className="flex min-h-[44px] items-center text-sm"
-              onClick={() => setMobileOpen(false)}
-            >
-              {t(item.key)}
-            </Link>
-          ))}
-          <div className="mt-3 flex items-center justify-between border-t border-[var(--color-border)] pt-3">
-            <div className="flex gap-2">
-              {LOCALES.map((l) => (
+        <>
+          <div
+            className="fixed inset-0 top-14 z-40 bg-black/20 backdrop-blur-sm md:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="fixed left-0 right-0 top-14 z-50 border-t border-[var(--color-border)] bg-[var(--color-bg)] p-4 shadow-lg md:hidden">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.key}
+                href={`/${locale}${item.href}`}
+                className="flex min-h-[44px] items-center text-sm"
+                onClick={() => setMobileOpen(false)}
+              >
+                {t(item.key)}
+              </Link>
+            ))}
+            <div className="mt-3 flex items-center justify-between border-t border-[var(--color-border)] pt-3">
+              <div className="flex gap-2">
+                {LOCALES.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => switchLocale(l.code)}
+                    className={cn(
+                      "min-h-[44px] min-w-[44px] rounded-md px-3 text-xs font-medium",
+                      locale === l.code
+                        ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
+                        : "border border-[var(--color-border)]"
+                    )}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-2">
                 <button
-                  key={l.code}
-                  onClick={() => switchLocale(l.code)}
-                  className={cn(
-                    "min-h-[44px] min-w-[44px] rounded-md px-3 text-xs font-medium",
-                    locale === l.code
-                      ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                      : "border border-[var(--color-border)]"
-                  )}
+                  onClick={toggleDark}
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
                 >
-                  {l.label}
+                  {dark ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={toggleDark}
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
-              >
-                {dark ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
-              <a
-                href="https://github.com/wukangxin/ai-agent-learning"
-                target="_blank"
-                rel="noopener"
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
-              >
-                <Github size={18} />
-              </a>
+                <a
+                  href="https://github.com/wukangxin/ai-agent-learning"
+                  target="_blank"
+                  rel="noopener"
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
+                >
+                  <Github size={18} />
+                </a>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );

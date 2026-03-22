@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef, useCallback } from "react";
 import { useLocale } from "@/lib/i18n";
 import docsData from "@/data/generated/docs.json";
 import { unified } from "unified";
@@ -78,9 +78,50 @@ export function DocRenderer({ lessonId }: DocRendererProps) {
     return postProcessHtml(raw);
   }, [doc.content]);
 
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleCopyClick = useCallback((e: MouseEvent) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const pre = btn.closest("pre");
+    if (!pre) return;
+    const code = pre.querySelector("code");
+    if (!code) return;
+    navigator.clipboard.writeText(code.textContent || "").then(() => {
+      btn.textContent = "✓";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = "Copy";
+        btn.classList.remove("copied");
+      }, 2000);
+    });
+  }, []);
+
+  useEffect(() => {
+    const container = contentRef.current;
+    if (!container) return;
+    const pres = container.querySelectorAll("pre.code-block");
+    const buttons: HTMLButtonElement[] = [];
+    pres.forEach((pre) => {
+      if (pre.querySelector(".copy-btn")) return;
+      const btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.textContent = "Copy";
+      btn.addEventListener("click", handleCopyClick as EventListener);
+      pre.appendChild(btn);
+      buttons.push(btn);
+    });
+    return () => {
+      buttons.forEach((btn) => {
+        btn.removeEventListener("click", handleCopyClick as EventListener);
+        btn.remove();
+      });
+    };
+  }, [html, handleCopyClick]);
+
   return (
     <div className="py-4">
       <div
+        ref={contentRef}
         className="prose-custom"
         dangerouslySetInnerHTML={{ __html: html }}
       />

@@ -14,6 +14,14 @@ const LAYER_DOT_BG: Record<string, string> = {
   collaboration: "bg-red-500",
 };
 
+const LAYER_ACTIVE_BORDER: Record<string, string> = {
+  tools: "border-l-blue-500",
+  planning: "border-l-emerald-500",
+  memory: "border-l-purple-500",
+  concurrency: "border-l-amber-500",
+  collaboration: "border-l-red-500",
+};
+
 export function Sidebar() {
   const pathname = usePathname();
   const locale = pathname.split("/")[1] || "en";
@@ -22,7 +30,7 @@ export function Sidebar() {
 
   return (
     <nav className="hidden w-56 shrink-0 md:block">
-      <div className="sticky top-[calc(3.5rem+2rem)] space-y-5">
+      <div className="sticky top-[calc(3.5rem+2rem)] max-h-[calc(100vh-5.5rem)] space-y-5 overflow-y-auto pr-1">
         {LAYERS.map((layer) => (
           <div key={layer.id}>
             <div className="flex items-center gap-1.5 pb-1.5">
@@ -44,10 +52,10 @@ export function Sidebar() {
                     <Link
                       href={href}
                       className={cn(
-                        "block rounded-md px-2.5 py-1.5 text-sm transition-colors",
+                        "block rounded-md px-2.5 py-1.5 text-sm transition-colors border-l-2",
                         isActive
-                          ? "bg-zinc-100 font-medium text-zinc-900 dark:bg-zinc-800 dark:text-white"
-                          : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
+                          ? cn("bg-zinc-100 font-medium text-zinc-900 dark:bg-zinc-800 dark:text-white", LAYER_ACTIVE_BORDER[layer.id])
+                          : "border-l-transparent text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
                       )}
                     >
                       <span className="font-mono text-xs">{lId}</span>

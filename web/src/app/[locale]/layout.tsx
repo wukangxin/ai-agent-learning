@@ -40,10 +40,16 @@ export default async function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
+            document.body && document.body.classList.add('no-transition');
             var theme = localStorage.getItem('theme');
             if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
               document.documentElement.classList.add('dark');
             }
+            window.addEventListener('DOMContentLoaded', function() {
+              requestAnimationFrame(function() {
+                document.body.classList.remove('no-transition');
+              });
+            });
           })();
         `}} />
       </head>

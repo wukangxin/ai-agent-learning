@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import { diffLines, Change } from "diff";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +38,7 @@ export function CodeDiff({ oldSource, newSource, oldLabel, newLabel }: CodeDiffP
           <button
             onClick={() => setViewMode("split")}
             className={cn(
-              "min-h-[36px] px-3 text-xs font-medium transition-colors sm:inline-flex hidden",
+              "min-h-[36px] px-3 text-xs font-medium transition-colors sm:inline-flex sm:items-center hidden",
               viewMode === "split"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
                 : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400"
@@ -176,8 +176,44 @@ function SplitView({ changes }: { changes: Change[] }) {
       type === "empty" && "bg-zinc-50 dark:bg-zinc-900"
     );
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef({ isDragging: false, startX: 0, scrollLeft: 0 });
+
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    const el = containerRef.current;
+    if (!el) return;
+    dragState.current = { isDragging: true, startX: e.pageX - el.offsetLeft, scrollLeft: el.scrollLeft };
+    el.style.cursor = "grabbing";
+    el.style.userSelect = "none";
+  }, []);
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!dragState.current.isDragging) return;
+    const el = containerRef.current;
+    if (!el) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    el.scrollLeft = dragState.current.scrollLeft - (x - dragState.current.startX);
+  }, []);
+
+  const onMouseUp = useCallback(() => {
+    dragState.current.isDragging = false;
+    const el = containerRef.current;
+    if (!el) return;
+    el.style.cursor = "grab";
+    el.style.userSelect = "";
+  }, []);
+
   return (
-    <div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
+    <div
+      ref={containerRef}
+      className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700"
+      style={{ cursor: "grab" }}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseUp}
+    >
       <table className="w-full border-collapse font-mono text-xs leading-5">
         <tbody>
           {rows.map((row, i) => (
