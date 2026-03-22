@@ -16,18 +16,18 @@
 |  task_1.json     |                   |  fix-auth/       |
 |    status: "in_progress"             |    (git worktree) |
 |    worktree: "fix-auth"   ---------> |    branch: wt/fix-auth
-|    owner: "alice"        |           |    独立工作目录    |
+|    owner: "alice"|       |           |    独立工作目录   |
 +------------------+       |           +------------------+
                            |
 +------------------+       |           +------------------+
 |  task_2.json     |       |           |  add-tests/      |
 |    status: "pending"     |           |    (git worktree) |
-|    worktree: ""          |           |    branch: wt/add-tests
-|    owner: ""             |           |                  |
+|    worktree: ""  |       |           |    branch: wt/add-tests
+|    owner: ""     |       |           |                  |
 +------------------+                   +------------------+
-                                       |
-                                       |  index.json
-                                       |  events.jsonl
+                                       |                  |
+                                       |  index.json      |
+                                       |  events.jsonl    |
                                        +------------------+
 
 Worktree-任务绑定:
