@@ -187,6 +187,10 @@ mvn test
 | `Lesson12TaskManagerTest` | 工作树任务管理器与文件持久化 |
 | `Lesson13FullAgentTest` | 完整 Agent —— TodoManager、SkillLoader、TaskManager、BackgroundManager、MessageBus |
 
+## 致谢
+
+本项目灵感来源于 [learn-claude-code](https://github.com/anthropics/learn-claude-code) 项目（Python 版本）。
+
 ## 许可证
 
 本项目基于 [MIT 许可证](LICENSE) 开源。

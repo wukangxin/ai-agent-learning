@@ -187,6 +187,10 @@ mvn test
 | `Lesson12TaskManagerTest` | Worktree task manager with file persistence |
 | `Lesson13FullAgentTest` | Full agent — TodoManager, SkillLoader, TaskManager, BackgroundManager, MessageBus |
 
+## Acknowledgments
+
+This project is inspired by [learn-claude-code](https://github.com/anthropics/learn-claude-code) (Python version).
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
