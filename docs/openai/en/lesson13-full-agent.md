@@ -449,7 +449,7 @@ All tools from all lessons, registered in one `createTools()` method:
 
 ## Try It
 
-1. Run `Lesson13RunSimple` with a complex prompt: `"Plan a REST API project. Create tasks for each component. Spawn alice and bob to work on different parts. Use background tasks for builds."`
+1. Run `Lesson13RunSimple` with a complex prompt: `"Plan a REST API project in the trysamples directory. Create tasks for each component. Spawn alice and bob to work on different parts. Use background tasks for builds."`
 2. Observe all subsystems working together:
    - Tasks appear in `.tasks/`
    - Teammates communicate via `.team/inbox/`

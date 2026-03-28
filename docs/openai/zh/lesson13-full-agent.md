@@ -481,7 +481,7 @@ class TeammateManager {
 ## 试一试
 
 ```sh
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson13 --prompt='Create a multi-step project: 1) Setup a Spring Boot config file, 2) Write a REST controller, 3) Write unit tests. Use task management to track progress and spawn a teammate to help with testing.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson13 --prompt='Create a multi-step project in trysamples directory: 1) Setup a Spring Boot config file, 2) Write a REST controller, 3) Write unit tests. Use task management to track progress and spawn a teammate to help with testing.'"
 ```
 
 这将展示完整智能体的所有能力：任务管理、团队协作、后台执行、技能加载、上下文压缩。

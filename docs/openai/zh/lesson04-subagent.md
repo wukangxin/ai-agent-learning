@@ -193,7 +193,7 @@ private Map<String, ToolHandler> createParentHandlers() {
 ## 试一试
 
 ```sh
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson4 --prompt='分析项目中每个 Lesson 文件的功能, 为每个写一句话总结'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson4 --prompt='分析项目中每个 Lesson 文件的功能, 在 trysamples 目录下为每个写一句话总结'"
 ```
 
 观察日志中带 `[subagent]` 前缀的行 -- 这是子智能体在独立工作。父智能体只看到最终摘要。

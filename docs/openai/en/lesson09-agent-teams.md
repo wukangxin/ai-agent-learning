@@ -281,7 +281,7 @@ private void agentLoop(...) {
 
 ## Try It
 
-1. Run `Lesson9RunSimple` with: `"Create a team with alice (frontend) and bob (backend). Alice should build a login form, Bob should build the login API. They should coordinate via messages."`
+1. Run `Lesson9RunSimple` with: `"Create a team with alice (frontend) and bob (backend). Alice should build a login form in trysamples/index.html, Bob should build a login API config in trysamples/server.conf. They should coordinate via messages."`
 2. Watch `.team/config.json` update with member statuses.
 3. Check `.team/inbox/` to see JSONL messages flowing between agents.
 4. Observe alice and bob communicating without the lead as intermediary.
