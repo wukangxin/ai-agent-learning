@@ -255,7 +255,7 @@ private Map<String, ToolHandler> createHandlers() {
 ## 试一试
 
 ```sh
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson7 --prompt='Plan a REST API project with 3 tasks: setup, implementation, testing. Make them depend on each other.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson7 --prompt='Plan a REST API project in the trysamples directory with 3 tasks: setup, implementation, testing. Make them depend on each other.'"
 ```
 
 运行后查看 `.tasks/` 目录：

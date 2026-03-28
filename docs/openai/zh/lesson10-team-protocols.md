@@ -284,7 +284,7 @@ tools.add(createTool("plan_approval",
 ## 试一试
 
 ```sh
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson10 --prompt='Spawn a worker teammate. Send it a task, then request it to shut down gracefully.'"
+mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson10 --prompt='Spawn a worker teammate. Send it a task to create a file in the trysamples directory, then request it to shut down gracefully.'"
 ```
 
 观察日志中的 `shutdown_request` 和 `shutdown_response` 消息交换。

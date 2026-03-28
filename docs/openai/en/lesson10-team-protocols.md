@@ -260,7 +260,7 @@ tools.add(buildTool("plan_approval",
 
 ## Try It
 
-1. Run `Lesson10RunSimple` with: `"Spawn alice as a frontend dev. Ask her to build a dashboard. Then request her shutdown after she submits a plan."`
+1. Run `Lesson10RunSimple` with: `"Spawn alice as a frontend dev. Ask her to build a dashboard in the trysamples directory. Then request her shutdown after she submits a plan."`
 2. Watch the plan approval flow: alice submits a plan, the lead approves or rejects it.
 3. Watch the shutdown handshake: lead sends `shutdown_request`, alice responds with `shutdown_response`.
 4. Verify `config.json` shows alice's status transition: `working -> idle -> shutdown`.

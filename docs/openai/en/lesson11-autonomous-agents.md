@@ -250,7 +250,7 @@ tools.add(createTool("claim_task",
 
 ## Try It
 
-1. Run `Lesson11RunSimple` with: `"Create 3 tasks on the task board: write tests, fix bugs, update docs. Then spawn alice as a developer."`
+1. Run `Lesson11RunSimple` with: `"Create 3 tasks on the task board (all output files should go to the trysamples directory): write tests, fix bugs, update docs. Then spawn alice as a developer."`
 2. Watch alice auto-claim task #1, complete it, enter idle, then auto-claim task #2.
 3. Add a new task while alice is idle -- she should pick it up within 5 seconds.
 4. If no new tasks appear within 60 seconds of idle, alice shuts down automatically.

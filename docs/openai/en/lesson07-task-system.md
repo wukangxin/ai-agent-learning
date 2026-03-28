@@ -207,7 +207,7 @@ Status markers: `[ ]` pending, `[>]` in_progress, `[x]` completed.
 
 ## Try It
 
-1. Run `Lesson7RunSimple` with the prompt: `"Plan and implement a REST API with 3 endpoints. Create tasks for each step."`
+1. Run `Lesson7RunSimple` with the prompt: `"Plan and implement a REST API in the trysamples directory with 3 endpoints. Create tasks for each step."`
 2. Observe `.tasks/` directory populating with JSON files.
 3. Check that completing a prerequisite task auto-clears `blockedBy` in downstream tasks.
 4. Trigger context compression (Lesson 6) and verify the agent can still read its task board from disk.
