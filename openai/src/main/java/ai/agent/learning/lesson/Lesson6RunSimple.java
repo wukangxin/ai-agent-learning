@@ -33,8 +33,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -52,7 +54,8 @@ public class Lesson6RunSimple implements RunSimple {
 
     private static final Logger log = LoggerFactory.getLogger(Lesson6RunSimple.class);
 
-    private static final int THRESHOLD = 50000;
+    private static final int DEFAULT_AUTO_COMPACT_THRESHOLD = 12000;
+    private static final Pattern WINDOWS_ABSOLUTE_PATH = Pattern.compile("^([A-Za-z]):[\\\\/](.*)$");
 
     @Value("${openai.api-key}")
     private String apiKey;
@@ -106,7 +109,7 @@ public class Lesson6RunSimple implements RunSimple {
             microCompact(messages);
 
             // Layer 2: auto_compact if token estimate exceeds threshold
-            if (estimateTokens(messages) > THRESHOLD) {
+            if (estimateTokens(messages) > DEFAULT_AUTO_COMPACT_THRESHOLD) {
                 log.info("[auto_compact triggered]");
                 List<ChatCompletionMessageParam> compressed = autoCompact(messages);
                 messages.clear();
@@ -120,7 +123,7 @@ public class Lesson6RunSimple implements RunSimple {
 
             String sysPrompt = systemPrompt != null && !systemPrompt.isEmpty()
                     ? systemPrompt
-                    : "You are a coding agent at " + workDir + ". Use tools to solve tasks.";
+                    : "You are a coding agent at " + workDir + ". Use tools to solve tasks. " + platformGuidance();
             paramsBuilder.addSystemMessage(sysPrompt);
 
             ChatCompletion completion = client.chat().completions().create(paramsBuilder.build());
@@ -242,11 +245,42 @@ public class Lesson6RunSimple implements RunSimple {
 
     // -- Tool implementations --
     private Path safePath(String p) {
-        Path path = workDir.resolve(p).normalize();
+        Path path = resolveWorkspacePath(workDir, p, isWindows()).normalize();
         if (!path.startsWith(workDir)) {
             throw new IllegalArgumentException("Path escapes workspace: " + p);
         }
         return path;
+    }
+
+    static Path resolveWorkspacePath(Path workDir, String inputPath, boolean windows) {
+        String normalizedInput = inputPath;
+        if (windows) {
+            var inputMatcher = WINDOWS_ABSOLUTE_PATH.matcher(inputPath);
+            var workDirMatcher = WINDOWS_ABSOLUTE_PATH.matcher(workDir.toString().replace("\\", "/"));
+            if (inputMatcher.matches() && workDirMatcher.matches()
+                    && inputMatcher.group(1).equalsIgnoreCase(workDirMatcher.group(1))) {
+                String workDirRest = workDirMatcher.group(2).replace("\\", "/");
+                String inputRest = inputMatcher.group(2).replace("\\", "/");
+                String workDirPrefix = workDirRest.endsWith("/") ? workDirRest : workDirRest + "/";
+
+                if (inputRest.equalsIgnoreCase(workDirRest)) {
+                    return workDir;
+                }
+                if (inputRest.regionMatches(true, 0, workDirPrefix, 0, workDirPrefix.length())) {
+                    return workDir.resolve(inputRest.substring(workDirPrefix.length()));
+                }
+            }
+        } else {
+            var matcher = WINDOWS_ABSOLUTE_PATH.matcher(inputPath);
+            if (matcher.matches()) {
+                String drive = matcher.group(1).toLowerCase(Locale.ROOT);
+                String rest = matcher.group(2).replace("\\", "/");
+                normalizedInput = "/mnt/" + drive + "/" + rest;
+            }
+        }
+
+        Path candidate = Paths.get(normalizedInput);
+        return candidate.isAbsolute() ? candidate : workDir.resolve(normalizedInput);
     }
 
     private String runBash(String command) {
@@ -257,7 +291,7 @@ public class Lesson6RunSimple implements RunSimple {
             }
         }
         try {
-            ProcessBuilder pb = new ProcessBuilder("powershell.exe", "-NoProfile", "-Command", command);
+            ProcessBuilder pb = new ProcessBuilder(buildShellCommand(command, isWindows()));
             pb.redirectErrorStream(true);
             Process process = pb.start();
 
@@ -313,6 +347,22 @@ public class Lesson6RunSimple implements RunSimple {
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
+    }
+
+    static List<String> buildShellCommand(String command, boolean windows) {
+        return windows
+                ? List.of("powershell.exe", "-NoProfile", "-Command", command)
+                : List.of("bash", "-lc", command);
+    }
+
+    private boolean isWindows() {
+        return System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win");
+    }
+
+    private String platformGuidance() {
+        return isWindows()
+                ? "This workspace is running on Windows. Use PowerShell syntax and Windows paths when calling bash."
+                : "This workspace is running on Linux. Use bash syntax and POSIX paths when calling bash.";
     }
 
     private String escapeRegex(String s) {
