@@ -33,10 +33,12 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +56,7 @@ import java.util.stream.Collectors;
 public class Lesson9RunSimple implements RunSimple {
 
     private static final Logger log = LoggerFactory.getLogger(Lesson9RunSimple.class);
+    private static final Pattern WINDOWS_ABSOLUTE_PATH = Pattern.compile("^([A-Za-z]):[\\\\/](.*)$");
 
     private static final Set<String> VALID_MSG_TYPES = Set.of(
             "message", "broadcast", "shutdown_request", "shutdown_response", "plan_approval_response"
@@ -480,10 +483,40 @@ public class Lesson9RunSimple implements RunSimple {
             return "Error: " + e.getMessage();
         }
     }
+    static Path resolveWorkspacePath(Path workDir, String inputPath, boolean windows) {
+        String normalizedInput = inputPath;
+        if (windows) {
+            var inputMatcher = WINDOWS_ABSOLUTE_PATH.matcher(inputPath);
+            var workDirMatcher = WINDOWS_ABSOLUTE_PATH.matcher(workDir.toString().replace("\\", "/"));
+            if (inputMatcher.matches() && workDirMatcher.matches()
+                    && inputMatcher.group(1).equalsIgnoreCase(workDirMatcher.group(1))) {
+                String workDirRest = workDirMatcher.group(2).replace("\\", "/");
+                String inputRest = inputMatcher.group(2).replace("\\", "/");
+                String workDirPrefix = workDirRest.endsWith("/") ? workDirRest : workDirRest + "/";
+
+                if (inputRest.equalsIgnoreCase(workDirRest)) {
+                    return workDir;
+                }
+                if (inputRest.regionMatches(true, 0, workDirPrefix, 0, workDirPrefix.length())) {
+                    return workDir.resolve(inputRest.substring(workDirPrefix.length()));
+                }
+            }
+        } else {
+            var matcher = WINDOWS_ABSOLUTE_PATH.matcher(inputPath);
+            if (matcher.matches()) {
+                String drive = matcher.group(1).toLowerCase(Locale.ROOT);
+                String rest = matcher.group(2).replace("\\", "/");
+                normalizedInput = "/mnt/" + drive + "/" + rest;
+            }
+        }
+
+        Path candidate = Paths.get(normalizedInput);
+        return candidate.isAbsolute() ? candidate : workDir.resolve(normalizedInput);
+    }
 
     private static String runRead(String path, Path workDir) {
         try {
-            Path p = workDir.resolve(path).normalize();
+            Path p = resolveWorkspacePath(workDir, path, System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win")).normalize();
             if (!p.startsWith(workDir)) return "Error: Path escapes workspace";
             List<String> lines = Files.readAllLines(p, StandardCharsets.UTF_8);
             return truncate(String.join("\n", lines), 50000);
@@ -494,7 +527,7 @@ public class Lesson9RunSimple implements RunSimple {
 
     private static String runWrite(String path, String content, Path workDir) {
         try {
-            Path p = workDir.resolve(path).normalize();
+            Path p = resolveWorkspacePath(workDir, path, System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win")).normalize();
             if (!p.startsWith(workDir)) return "Error: Path escapes workspace";
             Files.createDirectories(p.getParent());
             Files.write(p, content.getBytes(StandardCharsets.UTF_8));
@@ -506,7 +539,7 @@ public class Lesson9RunSimple implements RunSimple {
 
     private static String runEdit(String path, String oldText, String newText, Path workDir) {
         try {
-            Path p = workDir.resolve(path).normalize();
+            Path p = resolveWorkspacePath(workDir, path, System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win")).normalize();
             if (!p.startsWith(workDir)) return "Error: Path escapes workspace";
             String content = new String(Files.readAllBytes(p), StandardCharsets.UTF_8);
             if (!content.contains(oldText)) return "Error: Text not found in " + path;

@@ -32,7 +32,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -48,6 +50,7 @@ import java.util.stream.Collectors;
 public class Lesson2RunSimple implements RunSimple {
 
     private static final Logger log = LoggerFactory.getLogger(Lesson2RunSimple.class);
+    private static final Pattern WINDOWS_ABSOLUTE_PATH = Pattern.compile("^([A-Za-z]):[\\\\/](.*)$");
 
     @Value("${openai.api-key}")
     private String apiKey;
@@ -149,11 +152,42 @@ public class Lesson2RunSimple implements RunSimple {
 
     // -- Tool implementations --
     private Path safePath(String p) {
-        Path path = workDir.resolve(p).normalize();
+        Path path = resolveWorkspacePath(workDir, p, System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win")).normalize();
         if (!path.startsWith(workDir)) {
             throw new IllegalArgumentException("Path escapes workspace: " + p);
         }
         return path;
+    }
+
+    static Path resolveWorkspacePath(Path workDir, String inputPath, boolean windows) {
+        String normalizedInput = inputPath;
+        if (windows) {
+            var inputMatcher = WINDOWS_ABSOLUTE_PATH.matcher(inputPath);
+            var workDirMatcher = WINDOWS_ABSOLUTE_PATH.matcher(workDir.toString().replace("\\", "/"));
+            if (inputMatcher.matches() && workDirMatcher.matches()
+                    && inputMatcher.group(1).equalsIgnoreCase(workDirMatcher.group(1))) {
+                String workDirRest = workDirMatcher.group(2).replace("\\", "/");
+                String inputRest = inputMatcher.group(2).replace("\\", "/");
+                String workDirPrefix = workDirRest.endsWith("/") ? workDirRest : workDirRest + "/";
+
+                if (inputRest.equalsIgnoreCase(workDirRest)) {
+                    return workDir;
+                }
+                if (inputRest.regionMatches(true, 0, workDirPrefix, 0, workDirPrefix.length())) {
+                    return workDir.resolve(inputRest.substring(workDirPrefix.length()));
+                }
+            }
+        } else {
+            var matcher = WINDOWS_ABSOLUTE_PATH.matcher(inputPath);
+            if (matcher.matches()) {
+                String drive = matcher.group(1).toLowerCase(Locale.ROOT);
+                String rest = matcher.group(2).replace("\\", "/");
+                normalizedInput = "/mnt/" + drive + "/" + rest;
+            }
+        }
+
+        Path candidate = Paths.get(normalizedInput);
+        return candidate.isAbsolute() ? candidate : workDir.resolve(normalizedInput);
     }
 
     private String runBash(String command) {
@@ -186,9 +220,10 @@ public class Lesson2RunSimple implements RunSimple {
     private String runRead(String path, Integer limit) {
         try {
             List<String> lines = Files.readAllLines(safePath(path), StandardCharsets.UTF_8);
-            if (limit != null && limit < lines.size()) {
-                lines = lines.subList(0, limit);
-                lines.add("... (" + (lines.size() - limit) + " more lines)");
+            int originalSize = lines.size();
+            if (limit != null && limit < originalSize) {
+                lines = new ArrayList<>(lines.subList(0, limit));
+                lines.add("... (" + (originalSize - limit) + " more lines)");
             }
             return truncate(String.join("\n", lines), 50000);
         } catch (Exception e) {
